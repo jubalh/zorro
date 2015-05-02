@@ -1,3 +1,5 @@
+ZORRO_DIR=$HOME/.config/zorro
+
 if [[ -d "$HOME/scripts" ]] ; then
 	PATH=$PATH:$HOME/scripts
 fi
@@ -11,4 +13,4 @@ export GOPATH="$HOME/.golang"
 export GOBIN="$HOME/.golang/bin"
 export PATH="$PATH:$GOPATH/bin"
 
-source ./modules/symfony.zsh
+source $ZORRO_DIR/modules/symfony.zsh
