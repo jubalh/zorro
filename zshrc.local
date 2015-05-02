@@ -1,0 +1,14 @@
+if [[ -d "$HOME/scripts" ]] ; then
+	PATH=$PATH:$HOME/scripts
+fi
+
+alias v='vim'
+
+#vi mode
+set -o vi
+
+export GOPATH="$HOME/.golang"
+export GOBIN="$HOME/.golang/bin"
+export PATH="$PATH:$GOPATH/bin"
+
+source ./modules/symfony.zsh
