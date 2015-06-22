@@ -13,5 +13,10 @@ export GOPATH="$HOME/.golang"
 export GOBIN="$HOME/.golang/bin"
 export PATH="$PATH:$GOPATH/bin"
 
+
+# match uppercase from lowercase, and in case it doesnt find anything run it with * as pre and suffix
+# goot if you have many files which start the same but have a different file ending
+zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}' +'l:|=* r:|=*'
+
 source $ZORRO_DIR/modules/symfony.zsh
 source $ZORRO_DIR/modules/osc.zsh
