@@ -18,5 +18,7 @@ export PATH="$PATH:$GOPATH/bin"
 # goot if you have many files which start the same but have a different file ending
 zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}' +'l:|=* r:|=*'
 
-source $ZORRO_DIR/modules/symfony.zsh
+DISABLE_AUTO_TITLE="true"
+
 source $ZORRO_DIR/modules/osc.zsh
+#source $ZORRO_DIR/modules/base16-shell.zsh
