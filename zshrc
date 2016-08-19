@@ -412,45 +412,6 @@ check_com() {
     return 1
 }
 
-# creates an alias and precedes the command with
-# sudo if $EUID is not zero.
-salias() {
-    emulate -L zsh
-    local only=0 ; local multi=0
-    local key val
-    while getopts ":hao" opt; do
-        case $opt in
-            o) only=1 ;;
-            a) multi=1 ;;
-            h)
-                printf 'usage: salias [-hoa] <alias-expression>\n'
-                printf '  -h      shows this help text.\n'
-                printf '  -a      replace '\'' ; '\'' sequences with '\'' ; sudo '\''.\n'
-                printf '          be careful using this option.\n'
-                printf '  -o      only sets an alias if a preceding sudo would be needed.\n'
-                return 0
-                ;;
-            *) salias -h >&2; return 1 ;;
-        esac
-    done
-    shift "$((OPTIND-1))"
-
-    if (( ${#argv} > 1 )) ; then
-        printf 'Too many arguments %s\n' "${#argv}"
-        return 1
-    fi
-
-    key="${1%%\=*}" ;  val="${1#*\=}"
-    if (( EUID == 0 )) && (( only == 0 )); then
-        alias -- "${key}=${val}"
-    elif (( EUID > 0 )) ; then
-        (( multi > 0 )) && val="${val// ; / ; sudo }"
-        alias -- "${key}=sudo ${val}"
-    fi
-
-    return 0
-}
-
 # a "print -l ${(u)foo}"-workaround for pre-4.2.0 shells
 # usage: uprint foo
 #   Where foo is the *name* of the parameter you want printed.
@@ -506,7 +467,7 @@ xcat() {
 xunfunction() {
     emulate -L zsh
     local -a funcs
-    funcs=(salias xcat xsource xunfunction zrcautoload zrcautozle)
+    funcs=(xcat xsource xunfunction zrcautoload zrcautozle)
     for func in $funcs ; do
         [[ -n ${functions[$func]} ]] \
             && unfunction $func
@@ -2562,63 +2523,6 @@ $bg[white]$fg[black]
 Please report wishes + bugs to the grml-team: http://grml.org/bugs/
 Enjoy your grml system with the zsh!$reset_color"
 }
-
-# debian stuff
-if [[ -r /etc/debian_version ]] ; then
-    #a3# Execute \kbd{apt-cache search}
-    alias acs='apt-cache search'
-    #a3# Execute \kbd{apt-cache show}
-    alias acsh='apt-cache show'
-    #a3# Execute \kbd{apt-cache policy}
-    alias acp='apt-cache policy'
-    #a3# Execute \kbd{apt-get dist-upgrade}
-    salias adg="apt-get dist-upgrade"
-    #a3# Execute \kbd{apt-get install}
-    salias agi="apt-get install"
-    #a3# Execute \kbd{aptitude install}
-    salias ati="aptitude install"
-    #a3# Execute \kbd{apt-get upgrade}
-    salias ag="apt-get upgrade"
-    #a3# Execute \kbd{apt-get update}
-    salias au="apt-get update"
-    #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-    salias -a up="aptitude update ; aptitude safe-upgrade"
-    #a3# Execute \kbd{dpkg-buildpackage}
-    alias dbp='dpkg-buildpackage'
-    #a3# Execute \kbd{grep-excuses}
-    alias ge='grep-excuses'
-
-    # get a root shell as normal user in live-cd mode:
-    if isgrmlcd && [[ $UID -ne 0 ]] ; then
-       alias su="sudo su"
-    fi
-
-    #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
-    salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
-    #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
-    salias tlog="tail -f /var/log/syslog"    # follow the syslog
-fi
-
-# sort installed Debian-packages by size
-if check_com -c dpkg-query ; then
-    #a3# List installed Debian-packages sorted by size
-    alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
-fi
-
-# if cdrecord is a symlink (to wodim) or isn't present at all warn:
-if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
-    if check_com -c wodim; then
-        cdrecord() {
-            <<__EOF0__
-cdrecord is not provided under its original name by Debian anymore.
-See #377109 in the BTS of Debian for more details.
-
-Please use the wodim binary instead
-__EOF0__
-            return 1
-        }
-    fi
-fi
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
