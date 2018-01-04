@@ -7,11 +7,11 @@ fi
 alias v='vim'
 
 #vi mode
-set -o vi
+#set -o vi
 
 export GOPATH="$HOME/.golang"
 export GOBIN="$HOME/.golang/bin"
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$GOPATH/bin:$HOME/.cargo/bin"
 
 
 # match uppercase from lowercase, and in case it doesnt find anything run it with * as pre and suffix
@@ -22,3 +22,5 @@ DISABLE_AUTO_TITLE="true"
 
 source $ZORRO_DIR/modules/osc.zsh
 #source $ZORRO_DIR/modules/base16-shell.zsh
+
+alias jhbuild='unset CONFIG_SITE; ~/.local/bin/jhbuild'
