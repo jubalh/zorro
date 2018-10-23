@@ -21,6 +21,3 @@ zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}' +'l:|=* r:|=
 DISABLE_AUTO_TITLE="true"
 
 source $ZORRO_DIR/modules/osc.zsh
-#source $ZORRO_DIR/modules/base16-shell.zsh
-
-alias jhbuild='unset CONFIG_SITE; ~/.local/bin/jhbuild'
